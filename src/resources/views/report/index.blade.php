@@ -11,8 +11,8 @@
       <h3 class="card-title">{{ trans('seat-capitals::capitals.report_filters') }}</h3>
     </div>
     <div class="card-body">
-      <div class="form-row align-items-end">
-        <div class="form-group col-md-7">
+      <div class="row align-items-end">
+        <div class="form-group col-md-6">
           <label for="capitals-systems">{{ trans('seat-capitals::capitals.filter_systems') }}</label>
           <select id="capitals-systems" class="form-control" multiple="multiple">
             @foreach($home_systems as $system)
@@ -21,7 +21,7 @@
           </select>
           <small class="form-text text-muted">{{ trans('seat-capitals::capitals.filter_systems_help') }}</small>
         </div>
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-4 pl-md-4">
           <div class="custom-control custom-checkbox">
             <input type="checkbox" class="custom-control-input" id="capitals-include-alts" />
             <label class="custom-control-label" for="capitals-include-alts">{{ trans('seat-capitals::capitals.filter_include_alts') }}</label>
