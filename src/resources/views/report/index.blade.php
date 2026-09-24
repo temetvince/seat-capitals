@@ -11,7 +11,7 @@
       <h3 class="card-title">{{ trans('seat-capitals::capitals.report_filters') }}</h3>
     </div>
     <div class="card-body">
-      <div class="row align-items-end">
+      <div class="row align-items-start">
         <div class="form-group col-md-6">
           <label for="capitals-systems">{{ trans('seat-capitals::capitals.filter_systems') }}</label>
           <select id="capitals-systems" class="form-control" multiple="multiple">
@@ -35,6 +35,7 @@
           <small class="form-text text-muted">{{ trans('seat-capitals::capitals.filter_scope_help') }}</small>
         </div>
         <div class="form-group col-md-2">
+          <label class="d-none d-md-block" aria-hidden="true">&nbsp;</label>
           <button type="button" class="btn btn-primary btn-block" id="capitals-report-refresh">
             <i class="fas fa-sync"></i> {{ trans('seat-capitals::capitals.button_refresh') }}
           </button>
