@@ -1,0 +1,16 @@
+includes:
+  - vendor/larastan/larastan/extension.neon
+
+parameters:
+  level: 6
+  paths:
+    - src
+    - tests
+  excludePaths:
+    - src/resources
+  tmpDir: build/phpstan
+  # Upstream SeAT documents `auth()->user()` and several relations with types
+  # looser than the runtime objects (its User is not a Foundation\Auth\User).
+  # Treating those docblocks as certain would flag every instanceof narrowing
+  # against the real SeAT classes as impossible.
+  treatPhpDocTypesAsCertain: false

@@ -1,0 +1,16 @@
+# Changelog
+
+Release notes for SeAT Capitals. Each version lists what an operator sees after upgrading.
+
+## Unreleased
+
+- Capital build applications: members with `capitals.apply` submit, follow and withdraw applications
+  for their own characters.
+- Review screen: users with `capitals.review` approve or deny pending applications with an optional
+  note. Decisions are written to SeAT's security log.
+- Capital report: users with `character.capitals` see every capital hull owned by the characters in
+  their permission scope, with the system each hull sits in. Optional system filter and an
+  "include alts" switch that adds same-account characters.
+- Settings screen: home systems that pre-fill the report filter.
+- Two notification alerts for SeAT notification groups: new application, and application decided.
+- Publishable config listing which SDE groups count as capital hulls.

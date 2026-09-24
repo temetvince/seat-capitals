@@ -1,0 +1,65 @@
+{
+  "name": "temetvince/seat-capitals",
+  "description": "Capital ship tracking for SeAT",
+  "type": "library",
+  "license": "Unlicense",
+  "authors": [
+    {
+      "name": "Emmett Casey",
+      "email": "temetvince@gmail.com"
+    }
+  ],
+  "keywords": [
+    "seat",
+    "eve",
+    "online",
+    "capitals"
+  ],
+  "autoload": {
+    "psr-4": {
+      "temetvince\\SeatCapitals\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "temetvince\\SeatCapitals\\Tests\\": "tests/"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "php": "^8.1",
+    "eveseat/eveapi": "^5.0",
+    "eveseat/notifications": "^5.0",
+    "eveseat/services": "^5.1",
+    "eveseat/web": "^5.0"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.0",
+    "larastan/larastan": "^2.0",
+    "orchestra/testbench": "^8.0",
+    "phpunit/phpunit": "^10.0"
+  },
+  "scripts": {
+    "test": "phpunit",
+    "lint": "php-cs-fixer fix --dry-run --diff",
+    "format": "php-cs-fixer fix",
+    "analyse": "phpstan analyse --memory-limit=1G",
+    "check": [
+      "@composer validate --strict",
+      "@lint",
+      "@analyse",
+      "@test"
+    ]
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "temetvince\\SeatCapitals\\CapitalsServiceProvider"
+      ]
+    }
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
