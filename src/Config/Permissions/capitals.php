@@ -27,4 +27,8 @@ return [
         'label' => 'seat-capitals::capitals.permission_review_label',
         'description' => 'seat-capitals::capitals.permission_review_description',
     ],
+    'report_all' => [
+        'label' => 'seat-capitals::capitals.permission_report_all_label',
+        'description' => 'seat-capitals::capitals.permission_report_all_description',
+    ],
 ];

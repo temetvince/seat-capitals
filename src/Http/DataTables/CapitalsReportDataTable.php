@@ -62,14 +62,20 @@ class CapitalsReportDataTable extends DataTable
 
                 return view('web::partials.character', ['character' => $main])->render();
             })
+            ->addColumn('corporation', function (CapitalHull $row) {
+                $corporation = $row->character?->getRelationValue('affiliation')?->getRelationValue('corporation');
+
+                return view('web::partials.corporation', ['corporation' => $corporation])->render();
+            })
             ->editColumn('type_name', function (CapitalHull $row) {
                 return view('web::partials.type', [
                     'type_id' => $row->type_id,
                     'type_name' => $row->type_name,
                 ])->render();
             })
+            // Columns outside rawColumns() are HTML-escaped by DataTables itself.
             ->editColumn('name', function (CapitalHull $row) {
-                return e($row->name ?? '');
+                return $row->name ?? '';
             })
             ->editColumn('is_singleton', function (CapitalHull $row) {
                 return trans($row->is_singleton
@@ -98,11 +104,16 @@ class CapitalsReportDataTable extends DataTable
             ->filterColumn('name', function (Builder $query, string $keyword) {
                 $query->where('character_assets.name', 'like', "%{$keyword}%");
             })
+            ->filterColumn('corporation', function (Builder $query, string $keyword) {
+                $query->whereHas('character.affiliation.corporation', function (Builder $corporation) use ($keyword) {
+                    $corporation->where('name', 'like', "%{$keyword}%");
+                });
+            })
             ->orderColumn('type_name', 'invTypes.typeName $1')
             ->orderColumn('group_name', 'invGroups.groupName $1')
             ->orderColumn('system_name', 'solar_systems.name $1')
             ->orderColumn('name', 'character_assets.name $1')
-            ->rawColumns(['character.name', 'main', 'type_name', 'system_name'])
+            ->rawColumns(['character.name', 'main', 'corporation', 'type_name', 'system_name'])
             ->toJson();
     }
 
@@ -115,7 +126,7 @@ class CapitalsReportDataTable extends DataTable
             ->postAjax([
                 'data' => 'function(d) { '
                     . 'd.systems = $("#capitals-systems").val() || []; '
-                    . 'd.include_alts = $("#capitals-include-alts").is(":checked") ? 1 : 0; '
+                    . 'd.scope = $("#capitals-scope").val(); '
                     . '}',
             ])
             ->parameters([
@@ -133,6 +144,7 @@ class CapitalsReportDataTable extends DataTable
         return $this->fleet->build($this->system_ids)
             ->with([
                 'character',
+                'character.affiliation.corporation',
                 'character.user' => function ($relation) {
                     $relation->with('main_character');
                 },
@@ -147,6 +159,7 @@ class CapitalsReportDataTable extends DataTable
         return [
             ['data' => 'main', 'title' => trans('seat-capitals::capitals.column_main'), 'orderable' => false, 'searchable' => false],
             ['data' => 'character.name', 'title' => trans('seat-capitals::capitals.column_character')],
+            ['data' => 'corporation', 'title' => trans('seat-capitals::capitals.column_corporation'), 'orderable' => false],
             ['data' => 'type_name', 'title' => trans('seat-capitals::capitals.column_hull')],
             ['data' => 'group_name', 'title' => trans('seat-capitals::capitals.column_class')],
             ['data' => 'name', 'title' => trans('seat-capitals::capitals.column_ship_name')],

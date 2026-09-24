@@ -29,7 +29,7 @@ class CapitalsServiceProviderTest extends TestCase
         $permissions = config('seat.permissions.capitals');
 
         $this->assertIsArray($permissions);
-        $this->assertSame(['apply', 'review'], array_keys($permissions));
+        $this->assertSame(['apply', 'review', 'report_all'], array_keys($permissions));
 
         foreach ($permissions as $permission) {
             $this->assertNotSame($permission['label'], trans($permission['label']), 'permission label must translate');

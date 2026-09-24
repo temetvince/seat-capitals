@@ -22,11 +22,17 @@
           <small class="form-text text-muted">{{ trans('seat-capitals::capitals.filter_systems_help') }}</small>
         </div>
         <div class="form-group col-md-4 pl-md-4">
-          <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="capitals-include-alts" />
-            <label class="custom-control-label" for="capitals-include-alts">{{ trans('seat-capitals::capitals.filter_include_alts') }}</label>
-          </div>
-          <small class="form-text text-muted">{{ trans('seat-capitals::capitals.filter_include_alts_help') }}</small>
+          <label for="capitals-scope">{{ trans('seat-capitals::capitals.filter_scope') }}</label>
+          <select id="capitals-scope" class="form-control">
+            @foreach(\temetvince\SeatCapitals\Models\ReportScope::cases() as $scope)
+              @if(! $scope->isUnrestricted() || $can_report_all)
+                <option value="{{ $scope->value }}" @if($scope === $default_scope) selected="selected" @endif>
+                  {{ trans($scope->labelKey()) }}
+                </option>
+              @endif
+            @endforeach
+          </select>
+          <small class="form-text text-muted">{{ trans('seat-capitals::capitals.filter_scope_help') }}</small>
         </div>
         <div class="form-group col-md-2">
           <button type="button" class="btn btn-primary btn-block" id="capitals-report-refresh">
@@ -71,7 +77,7 @@
       $('#capitals-report').DataTable().draw();
     });
 
-    $('#capitals-include-alts').on('change', function () {
+    $('#capitals-scope').on('change', function () {
       $('#capitals-report').DataTable().draw();
     });
   </script>

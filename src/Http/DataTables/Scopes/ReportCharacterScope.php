@@ -13,19 +13,19 @@ namespace temetvince\SeatCapitals\Http\DataTables\Scopes;
 use Seat\Eveapi\Models\Character\CharacterInfo;
 use Seat\Web\Http\DataTables\Scopes\CharacterScope;
 use Seat\Web\Models\User;
+use temetvince\SeatCapitals\Models\ReportScope;
 use temetvince\SeatCapitals\Services\AltResolver;
 use Yajra\DataTables\Contracts\DataTableScope;
 
 /**
- * Limits the report to characters the viewer may see, optionally with their alts.
+ * Limits the report to the characters a `ReportScope` covers for the viewer.
  *
- * The visible set is whatever SeAT's own `CharacterScope` allows for the
- * `character.capitals` permission: the viewer's characters plus every
- * character matched by the role's affiliation filters. With `include_alts`
- * the set is widened through `AltResolver` to every character on the same
- * SeAT accounts, so out-of-corp alts of in-scope characters appear too.
- *
- * Admins see everything, so for them the query is left untouched.
+ * For `Filtered` and `Alts` the visible set is whatever SeAT's own
+ * `CharacterScope` allows for the `character.capitals` permission: the
+ * viewer's characters plus every character matched by the role's affiliation
+ * filters, widened through `AltResolver` for `Alts`. For `All` the query is
+ * left untouched, so the caller must have checked `capitals.report_all`
+ * before choosing that scope. Admins see everything whatever the scope.
  *
  * @package temetvince\SeatCapitals\Http\DataTables\Scopes
  */
@@ -34,14 +34,14 @@ class ReportCharacterScope implements DataTableScope
     public const ABILITY = 'character.capitals';
 
     public function __construct(
-        private readonly bool $include_alts,
+        private readonly ReportScope $scope,
         private readonly AltResolver $alts,
     ) {
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder<\Seat\Eveapi\Models\Assets\CharacterAsset>  $query
-     * @return \Illuminate\Database\Eloquent\Builder<\Seat\Eveapi\Models\Assets\CharacterAsset>
+     * @param  \Illuminate\Database\Eloquent\Builder<\temetvince\SeatCapitals\Models\CapitalHull>  $query
+     * @return \Illuminate\Database\Eloquent\Builder<\temetvince\SeatCapitals\Models\CapitalHull>
      */
     public function apply($query)
     {
@@ -51,13 +51,17 @@ class ReportCharacterScope implements DataTableScope
             return $query;
         }
 
+        if ($this->scope->isUnrestricted()) {
+            return $query;
+        }
+
         /** @var \Illuminate\Database\Eloquent\Builder<CharacterInfo> $visible */
         $visible = (new CharacterScope(self::ABILITY))
             ->apply(CharacterInfo::query()->select('character_infos.character_id'));
 
         $character_ids = $visible->pluck('character_id')->map(fn ($id) => (int) $id)->all();
 
-        if ($this->include_alts) {
+        if ($this->scope->includesAlts()) {
             $character_ids = $this->alts->expand($character_ids);
         }
 

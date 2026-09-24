@@ -57,8 +57,10 @@ class ApplicationsDataTable extends DataTable
             ->editColumn('status', function (CapitalApplication $row) {
                 return view('seat-capitals::partials.status', ['status' => $row->status])->render();
             })
+            // Columns outside rawColumns() are HTML-escaped by DataTables itself;
+            // escaping here too would show entities such as &#039; to the user.
             ->editColumn('justification', function (CapitalApplication $row) {
-                return e(Str::limit($row->justification, 120));
+                return Str::limit($row->justification, 120);
             })
             ->editColumn('created_at', function (CapitalApplication $row) {
                 return view('web::partials.date', ['datetime' => $row->created_at])->render();
@@ -66,7 +68,7 @@ class ApplicationsDataTable extends DataTable
             ->editColumn('reviewer.name', function (CapitalApplication $row) {
                 $reviewer = $row->reviewer?->getAttribute('name');
 
-                return e(is_string($reviewer) ? $reviewer : '');
+                return is_string($reviewer) ? $reviewer : '';
             })
             ->addColumn('action', function (CapitalApplication $row) {
                 return view('seat-capitals::partials.actions', [

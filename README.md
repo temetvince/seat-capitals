@@ -43,6 +43,7 @@ went through an application makes no difference to the report.
 | `capitals.apply` | Capitals tab | Submit, follow and withdraw applications for the user's own characters. |
 | `capitals.review` | Capitals tab | See every application, approve or deny pending ones, and edit the plugin settings. |
 | `character.capitals` | Character tab | Open the report. Its character, corporation and alliance filters decide whose hulls appear. |
+| `capitals.report_all` | Capitals tab | Unlock the "Everyone in SeAT" option on the report, which ignores the role filters. |
 
 The report permission lives in SeAT's character scope on purpose. Set the role's filter to your
 corporation and the report shows exactly the hulls of characters in that corporation. Without a filter
@@ -54,16 +55,20 @@ the report shows every character SeAT knows. Admin users always see everything.
 | --- | --- | --- | --- |
 | My applications | `/capitals/applications` | `capitals.apply` | The application form and the user's own applications with their status and any reviewer note. |
 | Review applications | `/capitals/review` | `capitals.review` | Every application. Pending rows carry approve and deny buttons that open a note dialog. |
-| Capital report | `/capitals/report` | `character.capitals` | Every capital hull in scope with its owner, the owner's main, hull, class, ship name, assembled or packaged state, and system. |
+| Capital report | `/capitals/report` | `character.capitals` | Every capital hull in scope with its owner, the owner's main and current corporation, hull, class, ship name, assembled or packaged state, and system. |
 | Settings | `/capitals/settings` | `capitals.review` | The home systems that pre-fill the report filter. |
 
 ### Report filters
 
 - **Systems.** A multi-select backed by SeAT's system lookup. It starts with the configured home
   systems selected. Clear it to see hulls everywhere.
-- **Include alts.** Widens the character set to every character registered under the same SeAT account
-  as any character already in scope. This is how a corp member's out-of-corp alts get listed. The
-  **Main** column names the account's main character so alts can be attributed.
+- **Characters.** Whose hulls to list. "In my scope, plus their alts" is the default: the characters the
+  viewer's role filters allow, widened to every character registered under the same SeAT account, so a
+  corp member's out-of-corp alts get listed. "In my scope" drops the alts. "Everyone in SeAT" ignores the
+  role filters and covers every character SeAT knows, which is how a pilot who left the corporation but
+  still has a token stays visible; it appears only for viewers holding `capitals.report_all`. The
+  **Main** and **Corporation** columns show whose account a hull belongs to and where that character is
+  now, so departed members and out-of-corp alts are easy to spot.
 
 ### How a hull's system is found
 

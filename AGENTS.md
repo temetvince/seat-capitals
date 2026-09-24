@@ -338,17 +338,19 @@ All paths are relative to the root of this repository.
   `temetvince/seat-capitals`, namespace `temetvince\SeatCapitals`, license Unlicense (public domain).
   Its own git repository, branch `main`. The rest of the workspace is an unpackaged upstream checkout
   with no `vendor/` directory; it cannot be run or tested here, only read.
-- **Names the plugin owns.** Permissions `capitals.apply`, `capitals.review` and `character.capitals`
-  (the report permission sits in SeAT's character scope so roles get affiliation filters), view and
+- **Names the plugin owns.** Permissions `capitals.apply`, `capitals.review`, `capitals.report_all` and
+  `character.capitals` (the report permission sits in SeAT's character scope so roles get affiliation
+  filters; `report_all` unlocks the scope that ignores them), view and
   translation namespace `seat-capitals::`, route names `seat-capitals::*`, URL prefix `/capitals`,
   sidebar group key `seat-capitals`, config key `seat-capitals`, notification alerts prefixed
   `seat_capitals_`, global setting `seat_capitals_home_systems`, table prefix `seat_capitals_`. Treat
   every one of these as a wire format (rule 7).
 - **What it does.** Members apply to build a capital hull for one of their characters; reviewers
   approve or deny; a report lists every capital hull the in-scope characters own (from SeAT's synced
-  character assets, independent of applications) with the resolved solar system, an optional system
-  filter pre-filled from the home systems setting, and an "include alts" switch. Decisions and new
-  applications raise `eveseat/notifications` alerts.
+  character assets, independent of applications) with the owner's main and corporation, the resolved
+  solar system, an optional system filter pre-filled from the home systems setting, and a character
+  scope selector (in scope, in scope plus alts by default, or everyone in SeAT for `capitals.report_all`
+  holders). Decisions and new applications raise `eveseat/notifications` alerts.
 - **Host stack (from upstream `composer.json` files):** PHP `^8.1` (upstream CI runs 8.4), Laravel
   `^10`, `eveseat/services` `^5.1`, `eveseat/eveapi` `^5.0`, `eveseat/web` `^5.0`,
   `eveseat/notifications` `^5.0`, `yajra/laravel-datatables-oracle` `^10`, PHPUnit `^10`,

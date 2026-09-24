@@ -11,8 +11,10 @@
 namespace temetvince\SeatCapitals\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use temetvince\SeatCapitals\Http\DataTables\CapitalsReportDataTable;
 use temetvince\SeatCapitals\Http\DataTables\Scopes\ReportCharacterScope;
+use temetvince\SeatCapitals\Models\ReportScope;
 use temetvince\SeatCapitals\Services\AltResolver;
 use temetvince\SeatCapitals\Settings\HomeSystems;
 
@@ -21,12 +23,16 @@ use temetvince\SeatCapitals\Settings\HomeSystems;
  *
  * Gated by `character.capitals` in the route group. The page pre-fills the
  * system filter with the configured home systems; the table request then
- * carries whatever the viewer selected, plus the "include alts" flag.
+ * carries whatever the viewer selected, plus the chosen character scope.
+ * The unrestricted scope is honoured only for viewers holding
+ * `capitals.report_all`; anyone else silently gets the filtered scope.
  *
  * @package temetvince\SeatCapitals\Http\Controllers
  */
 class ReportController extends Controller
 {
+    public const REPORT_ALL_ABILITY = 'capitals.report_all';
+
     /**
      * @return mixed the rendered page, or the table's JSON for DataTables requests
      */
@@ -36,13 +42,20 @@ class ReportController extends Controller
         HomeSystems $home_systems,
         AltResolver $alts,
     ) {
-        $include_alts = $request->boolean('include_alts');
+        $can_report_all = Gate::allows(self::REPORT_ALL_ABILITY);
+        $scope = ReportScope::fromInput($request->input('scope'));
+
+        if ($scope->isUnrestricted() && ! $can_report_all) {
+            $scope = ReportScope::Filtered;
+        }
 
         return $dataTable
             ->filterSystems($this->requestedSystems($request))
-            ->addScope(new ReportCharacterScope($include_alts, $alts))
+            ->addScope(new ReportCharacterScope($scope, $alts))
             ->render('seat-capitals::report.index', [
                 'home_systems' => $home_systems->systems(),
+                'can_report_all' => $can_report_all,
+                'default_scope' => ReportScope::Alts,
             ]);
     }
 

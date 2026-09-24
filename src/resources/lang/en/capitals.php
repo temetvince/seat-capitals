@@ -24,6 +24,8 @@ return [
     'permission_review_description' => 'See every capital build application, approve or deny it, and manage the plugin settings.',
     'permission_report_label' => 'Capital ship report',
     'permission_report_description' => 'See which capital hulls the characters in scope own and where they are. Use the filters to limit the scope to a corporation or alliance.',
+    'permission_report_all_label' => 'Capital report for everyone in SeAT',
+    'permission_report_all_description' => 'Unlocks the "Everyone in SeAT" option on the capital report, which ignores the role filters and lists hulls of every character SeAT knows.',
 
     // Statuses
     'status_pending' => 'Pending',
@@ -61,14 +63,18 @@ return [
     'filter_systems' => 'Systems',
     'filter_systems_placeholder' => 'Search for a system or wormhole',
     'filter_systems_help' => 'Leave empty to list hulls everywhere. Pre-filled with the configured home systems.',
-    'filter_include_alts' => 'Include alts',
-    'filter_include_alts_help' => 'Also list hulls owned by other characters on the same SeAT accounts, even outside the corporation.',
+    'filter_scope' => 'Characters',
+    'filter_scope_help' => 'Whose hulls to list. Alts are other characters on the same SeAT accounts, even outside the corporation.',
+    'scope_filtered' => 'In my scope',
+    'scope_alts' => 'In my scope, plus their alts',
+    'scope_all' => 'Everyone in SeAT',
     'assembled' => 'Assembled',
     'packaged' => 'Packaged',
 
     // Columns
     'column_character' => 'Character',
     'column_main' => 'Main',
+    'column_corporation' => 'Corporation',
     'column_hull' => 'Hull',
     'column_class' => 'Class',
     'column_ship_name' => 'Ship name',
