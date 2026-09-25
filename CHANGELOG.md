@@ -2,7 +2,7 @@
 
 Release notes for SeAT Capitals. Each version lists what an operator sees after upgrading.
 
-## Unreleased
+## 1.0.0 - 2026-09-25
 
 - Capital build applications: members with `capitals.apply` submit, follow and withdraw applications
   for their own characters.
